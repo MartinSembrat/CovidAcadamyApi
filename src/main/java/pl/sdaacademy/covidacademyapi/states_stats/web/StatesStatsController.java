@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.sdaacademy.covidacademyapi.states_stats.repository.StateInfo;
 import pl.sdaacademy.covidacademyapi.states_stats.repository.StateStats;
 import pl.sdaacademy.covidacademyapi.states_stats.serivce.StatesStatsService;
 
@@ -27,5 +28,10 @@ public class StatesStatsController {
     @GetMapping("/{state}/{date}")
     public StateStats getStatsForState(@PathVariable String state, @PathVariable String date) {
         return statesStatsService.getStatsForState(state, date);
+    }
+
+    @GetMapping("/metadata")
+    public StateInfo[] getAllStatesInfo() {
+        return statesStatsService.getAllStatesInfo();
     }
 }
