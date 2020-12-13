@@ -1,4 +1,4 @@
-package sdaacademy.covidacademyapi.config;
+package pl.sdaacademy.covidacademyapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

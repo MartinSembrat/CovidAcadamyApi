@@ -1,4 +1,4 @@
-package sdaacademy.covidacademyapi;
+package pl.sdaacademy.covidacademyapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

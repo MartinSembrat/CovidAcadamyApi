@@ -1,6 +1,6 @@
-package sdaacademy.covidacademyapi.states_stats.repository;
+package pl.sdaacademy.covidacademyapi.states_stats.repository;
 
-public class StateCurrentStats {
+public class StateStats {
 
     private String state;
     private int positive;
