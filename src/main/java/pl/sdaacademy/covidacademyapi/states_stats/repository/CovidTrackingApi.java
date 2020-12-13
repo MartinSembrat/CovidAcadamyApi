@@ -4,8 +4,6 @@ public interface CovidTrackingApi {
 
     StateStats[] getAllStatesCurrentStats();
 
-    StateInfo[] getAllStatesInfo();
-
     StateStats getStatsForState(String state, String date);
 
 }
