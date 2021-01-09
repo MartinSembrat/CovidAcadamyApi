@@ -7,6 +7,7 @@ import pl.sdaacademy.covidacademyapi.states_metadata.repository.StatesMetadataDb
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StatesMetadataService {
@@ -24,8 +25,22 @@ public class StatesMetadataService {
         if(statesMetadataDbRepository.count() > 0) {
             return statesMetadataDbRepository.findAll();
         }
+        return fetchStatesMetadata();
+//        List<StatesMetadata> statesMetadata =
+//                Arrays.asList(statesMetadataApi.getStatesMetadata());
+//        return statesMetadataDbRepository.saveAll(statesMetadata);
+    }
+    private List<StatesMetadata> fetchStatesMetadata(){
         List<StatesMetadata> statesMetadata =
                 Arrays.asList(statesMetadataApi.getStatesMetadata());
         return statesMetadataDbRepository.saveAll(statesMetadata);
+    }
+
+    public Optional<StatesMetadata> getStateByName (String name){
+        if (statesMetadataDbRepository.count()==0){
+            fetchStatesMetadata();
+        }
+        return statesMetadataDbRepository.findByNameIgnoreCase(name);
+
     }
 }

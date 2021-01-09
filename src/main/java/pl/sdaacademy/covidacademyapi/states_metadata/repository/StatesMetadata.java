@@ -1,5 +1,6 @@
 package pl.sdaacademy.covidacademyapi.states_metadata.repository;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -10,6 +11,7 @@ public class StatesMetadata {
     private String state;
     private String name;
     private String twitter;
+    @Column(columnDefinition="LONGTEXT")
     private String covid19Site;
 
     public String getState() {
