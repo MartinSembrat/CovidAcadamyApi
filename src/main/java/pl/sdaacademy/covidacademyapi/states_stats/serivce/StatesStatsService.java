@@ -7,37 +7,44 @@ import pl.sdaacademy.covidacademyapi.states_metadata.serivce.StatesMetadataServi
 import pl.sdaacademy.covidacademyapi.states_stats.repository.CovidTrackingApi;
 import pl.sdaacademy.covidacademyapi.states_stats.repository.StateStats;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StatesStatsService {
+
     private final CovidTrackingApi covidTrackingApi;
     private final StatesMetadataService statesMetadataService;
+    private final StateStatsTransformer stateStatsTransformer;
+
     @Autowired
-    public StatesStatsService(StatesMetadataService statesMetadataService, CovidTrackingApi covidTrackingApi) {
+    public StatesStatsService(StatesMetadataService statesMetadataService, CovidTrackingApi covidTrackingApi,StateStatsTransformer stateStatsTransformer) {
         this.covidTrackingApi = covidTrackingApi;
         this.statesMetadataService = statesMetadataService;
+        this.stateStatsTransformer = stateStatsTransformer;
     }
-    public StateStats[] getAllStatesCurrentStats() {
-        //logika bizensowa, np. mapowanie, validacja, itp
-        return covidTrackingApi.getAllStatesCurrentStats();
-    }
-    public StateStats getStatsForState(String state, String date) {
-       // List<StatesMetadata> statesMetadata = statesMetadataService.getStatesMetadata();
-        String acronym = statesMetadataService.getStateByName(state)
-                .orElseThrow(()->{throw new NoStateFoundException(state);
-                }).getState();
-//                statesMetadata.stream()
-//                .filter(metadata -> metadata.getName().equalsIgnoreCase(state))
-//                .map(metadata->metadata.getState())
-//                .findAny().orElseThrow(()->{
-//                    throw new NoStateFoundException(state);
-        //        });
-        //mapowanie nazwy stanu na akronim
-        //zampowania wartość powinna zostać przekazana do covidTrackingApi.getStatsForState
-        //musimy wykorzystać StatesMetadataService w celu pobrania metadanych dla każdego stanu
-        //musimy znaleść na liście metadanych konkretny stan po nazwie
-        //jeśli stan istnieje powiniśmy pobrać akronim z obiektu
-        return covidTrackingApi.getStatsForState(acronym, date);
+//    public StateStats[] getAllStatesCurrentStats() {
+//        //logika bizensowa, np. mapowanie, validacja, itp
+//        return covidTrackingApi.getAllStatesCurrentStats();
+//    }
+
+public List<StateStatsDTO> getAllStatesCurrentStats() {
+    return Arrays.stream(covidTrackingApi.getAllStatesCurrentStats())
+            .map(stateStats->{
+                StatesMetadata statesMetadata =
+                        statesMetadataService.getStateById(stateStats.getState()).get();
+                return stateStatsTransformer.transformToDTO(stateStats, statesMetadata);
+            })
+            .collect(Collectors.toList());
+}
+    public StateStatsDTO getStatsForState(String state, String date) {
+        StatesMetadata statesMetadata = statesMetadataService.getStateByName(state)
+                .orElseThrow(()->{
+                    throw new NoStateFoundException(state);
+                });
+        String acronym = statesMetadata.getState();
+        StateStats stateStats = covidTrackingApi.getStatsForState(acronym, date);
+        return stateStatsTransformer.transformToDTO(stateStats, statesMetadata);
     }
 }
