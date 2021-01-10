@@ -46,5 +46,5 @@ public class StateStatsDTO {
         this.recovered = recovered;
     }
 
-    //public StatesMetadata getStatesMetadata(){return statesMetadata;}
+    public StatesMetadata getStatesMetadata(){return statesMetadata;}
 }
