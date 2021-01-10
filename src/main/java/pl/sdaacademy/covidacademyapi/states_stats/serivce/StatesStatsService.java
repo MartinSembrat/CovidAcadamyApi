@@ -40,7 +40,7 @@ public List<StateStatsDTO> getAllStatesCurrentStats() {
 }
     public StateStatsDTO getStatsForState(String state, String date) {
         StatesMetadata statesMetadata = statesMetadataService.getStateByName(state)
-                .orElseThrow(()->{
+                .<NoStateFoundException>orElseThrow(()->{
                     throw new NoStateFoundException(state);
                 });
         String acronym = statesMetadata.getState();
